@@ -129,23 +129,27 @@ public class Utility {
         logQuery("UPDATE " + plugin.storageDatabase + " SET violations='0' WHERE name='" + player + "'");
     }
 
-    public static void autoPunish(String player) {
+    public static void autoPunish(String player, int violations) {
         plugin.recentlyDamaged.remove(player);
         notifyStaff(ChatColor.GOLD + "WARNING: " + ChatColor.RED + "Player " + player + " has combat logged and was automatically punished!");
-        if (checkViolationsFromDatabase(player) < 3 || checkViolationsFromDatabase(player) == 0) return;
-        if (checkViolationsFromDatabase(player) == 3) {
+        if (violations < 3) return;
+        if (violations == 3) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     "tempban " + player + " 3hour [Automated] Combat Logging");
             return;
         }
-        if (checkViolationsFromDatabase(player) == 5) {
+        if (violations == 4) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     "tempban " + player + " 1day [Automated] Combat Logging");
             return;
         }
-        if (checkViolationsFromDatabase(player) > 5) {
+        if (violations == 5) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                    "tempban " + player + " " + checkViolations(player) + "day  [Automated] Combat Logging");
+                    "tempban " + player + " 32hour  [Automated] Combat Logging");
+        }
+        if (violations > 5) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                    "tempban " + player + " " + violations + "day  [Automated] Combat Logging");
         }
     }
 

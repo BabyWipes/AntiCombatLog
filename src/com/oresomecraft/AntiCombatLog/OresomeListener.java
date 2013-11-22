@@ -53,8 +53,9 @@ public class OresomeListener implements Listener {
             if (plugin.recentlyDamaged.contains(p.getName())) {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                     public void run() {
+                        AntiLogPlayer alp = AntiLogPlayer.getAntiLogPlayer(p.getName());
                         Utility.incrementViolations(p.getName());
-                        Utility.autoPunish(p.getName());
+                        Utility.autoPunish(p.getName(), alp.getViolations());
                     }
                 });
             }
@@ -64,15 +65,16 @@ public class OresomeListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         final Player p = e.getPlayer();
-        AntiLogPlayer.removeInstance(p.getName());
+        final AntiLogPlayer alp = AntiLogPlayer.getAntiLogPlayer(p.getName());
         if (plugin.recentlyDamaged.contains(p.getName()) || p.getLocation().getY() < 2) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                 public void run() {
                     Utility.incrementViolations(p.getName());
-                    Utility.autoPunish(p.getName());
+                    Utility.autoPunish(p.getName(), alp.getViolations());
                 }
             });
         }
+        AntiLogPlayer.removeInstance(p.getName());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
