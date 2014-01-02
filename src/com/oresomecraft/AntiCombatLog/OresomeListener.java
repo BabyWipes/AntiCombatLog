@@ -49,7 +49,7 @@ public class OresomeListener implements Listener {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         final Player p = e.getPlayer();
-        if (e.getMessage().contains("leave")) {
+        if (e.getMessage().startsWith("/leave")) {
             if (plugin.recentlyDamaged.contains(p.getName())) {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                     public void run() {
